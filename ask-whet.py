@@ -25,10 +25,22 @@ def get_info():
     except Exception as e:
         return e
 
+def set_weather(setas="storm"):
+    conn = websocket.create_connection('ws://localhost:7999/chat/websocket?id=ask-whet', timeout=6)
+    conn.send('{"request": "settings" }')
+    answer = str(conn.recv())
+    print(answer)
+    answer = json.loads(answer)
+    answer['settings']['weather'] = setas
+    print(str(answer))
+    conn.send('{"update":' + json.dumps(answer) + '}')
+    conn.close(reason='done listening')
+    return str(answer)
+
 
 @app.route('/')
 def homepage():
-    return get_info()
+    return get_info() + set_weather()
 
     
 
