@@ -1,0 +1,14 @@
+all_your_base_msg: All your base are belong to {{ who }}
+
+welcome: |
+    <speak>
+        Connected.
+    </speak>
+
+storm: |
+    <speak>
+        Storms a comming!
+        <audio src='https://s3.amazonaws.com/ask-soundlibrary/nature/amzn_sfx_lightning_strike_01.mp3'/>
+        <audio src='https://s3.amazonaws.com/ask-soundlibrary/nature/amzn_sfx_thunder_rumble_01.mp3'/>
+        <audio src='https://s3.amazonaws.com/ask-soundlibrary/nature/amzn_sfx_thunder_rumble_02.mp3'/>
+    </speak>
