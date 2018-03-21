@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_ask import Ask, statement, question, session
+from flask_ask import Ask, statement, question, session, audio
 import json
 import requests
 import time
@@ -102,6 +102,25 @@ def normal_runmode_intent():
     time.sleep(1)
     set_runmode(setas='normal')
     return statement("Returning to normal run schedule.")
+
+@ask.intent('GeorgeIntent')
+def george_michael():
+    speech = 'yeah you got it!'
+
+    #stream_url = 'https://archive.org/download/WakeMeUpBeforeYouGoGo_417/WakeMeUpBeforeYouGoGo.ogg'
+    stream_url = 'https://ia800203.us.archive.org/27/items/CarelessWhisper_435/CarelessWhisper.ogg'
+
+    return audio(speech).play(stream_url)
+
+
+@ask.intent('AMAZON.PauseIntent')
+def pause():
+    return audio('Paused the stream.').stop()
+
+
+@ask.intent('AMAZON.ResumeIntent')
+def resume():
+    return audio('Resuming.').resume()
 
 
 
