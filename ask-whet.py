@@ -35,7 +35,7 @@ def set_runmode(setas="normal"):
     answer = str(conn.recv())
     print(answer)
     answer = json.loads(answer)
-    answer['settings']['weather'] = setas
+    answer['settings']['runmode'] = setas
     print(str(answer))
     conn.close(reason='done listening')
     conn = websocket.create_connection(url, timeout=6)
