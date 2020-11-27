@@ -6,6 +6,7 @@ import time
 #import unidecode
 import websocket
 import logging
+import os
 
 app = Flask(__name__)
 ask = Ask(app, '/ask')
@@ -76,6 +77,17 @@ def set_preview(setas=500, isOn=False):
     conn.send('{"update":' + json.dumps(response) + '}')
     close_connection(conn)
 
+def toggle_outlet_schedule(setas='enable'):
+    print(setas)
+    if setas == 'disable':
+        print('making file!')
+        with open('/tmp/disable-outlet-schedule.flag', 'w') as f:
+            f.write('file')
+    else:
+        os.remove('/tmp/disable-outlet-schedule.flag')
+
+
+
 
 @app.route('/')
 def homepage():
@@ -89,20 +101,25 @@ def start_skill():
     #welcome_message = get_info()
     return question(welcome_message)
 
-
-@ask.intent("InfoIntent")
+@ask.intent("AMAZON.YesIntent") #InfoIntent
 def share_info():
     print("Received Information Request")
     return statement(get_info())
 
-
-@ask.intent("RunmodeIntent", mapping={'runmode': 'Runmode'})
-def runmode_intent(runmode):
-    set_runmode(setas=runmode)
-    if runmode == 'storm':
+@ask.intent("RunmodeIntent")
+def runmode_intent(Runmode):
+    set_runmode(setas=Runmode)
+    if Runmode == 'storm':
         return statement(render_template('storm'))
     else:
-        return statement("Aquarium runmode set to " + runmode)
+        return statement("Aquarium runmode set to " + Runmode)
+
+@ask.intent("outlettoggle")
+def outlettoggle_intent(toggle):
+    print(toggle)
+    toggle_outlet_schedule(setas=toggle)
+    # return statement("I will " + toggle + " outlet schedule")
+    return statement('ok')
 
 
 @ask.intent("NoWeatherIntent")
@@ -115,7 +132,7 @@ def no_runmode_intent():
 def light_adjustment_intent(percent):
     pwm = int((percent / 100) * 4095)
     set_preview(setas=pwm, isOn=True)
-    return statement('Setting lights to {}'.format(pwm))
+    return statement('Setting lights to {} percent or {}'.format(percent, pwm))
 
 
 @ask.intent("AMAZON.StopIntent")
